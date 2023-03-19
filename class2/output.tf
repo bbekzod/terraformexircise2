@@ -14,3 +14,15 @@ output private_ip {
 output arn {
     value= aws_instance.web.arn
 }
+
+output web2_id {
+    value = aws_instance.web2.id
+}
+
+output sec_group_arn {
+    value = aws_security_group.class2.arn
+}
+
+output sec_group_desc {
+    value = aws_security_group.class2.description
+}
