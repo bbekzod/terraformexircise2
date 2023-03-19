@@ -44,10 +44,14 @@ resource "aws_security_group" "class2" {
 }
 
 
+# creates an EBS Volume 
+resource "aws_ebs_volume" "class2" {
+  availability_zone = "us-east-1a"
+  size              = 40
+}
 
 
-
-resource "aws_instance" "foo" {
+resource "aws_instance" "web" {
   ami                         = "ami-02f3f602d23f1659d" # us-west-2
   instance_type               = "t2.micro"
   associate_public_ip_address = true
@@ -58,3 +62,26 @@ resource "aws_instance" "foo" {
   ]
 }
 
+
+
+# attaches volume to an instance
+resource "aws_volume_attachment" "class2" {
+  device_name = "/dev/sdb"
+  volume_id   = aws_ebs_volume.class2.id
+  instance_id = aws_instance.web.id
+}
+
+
+
+# # creates DNS Record
+# resource "aws_route53_record" "class2" {
+#   allow_overwrite = true
+#   zone_id         = var.zone_id
+#   name            = "blog.${var.domain}"
+#   type            = "A"
+#   ttl             = 300
+#   records         = [aws_instance.web.public_ip]
+# }
+
+# variable "zone_id" {}
+# variable "domain" {}
